@@ -1,0 +1,28 @@
+C:
+int removeElement(int* nums, int numsSize, int val) {
+    int i=0,j=0;
+    for(i=0;i<numsSize;i++){
+        if(nums[i]!=val){
+            nums[j++]=nums[i];
+        }
+    }
+    return j;
+}
+
+这是一种快慢指针，看评论区还有一种对撞指针的算法，不过效果差不多。
+
+C++：
+class Solution {
+public:
+    int removeElement(vector<int>& nums, int val) {
+        int n = nums.size();
+        int left = 0;
+        for (int right = 0; right < n; right++) {
+            if (nums[right] != val) {
+                nums[left] = nums[right];
+                left++;
+            }
+        }
+        return left;
+    }
+};
