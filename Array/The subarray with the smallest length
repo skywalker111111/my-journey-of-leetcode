@@ -1,0 +1,44 @@
+首先想到的是两层for循环暴力
+int minSubArrayLen(int target, int* nums, int numsSize) {
+    int i,j;
+    int sum=0;
+    int subl;
+    int minl=numsSize;
+    for(i=0;i<numsSize;i++){
+        sum+=nums[i];
+    }
+    if(sum<target)
+    return 0;
+    for(i=0;i<numsSize;i++){
+        sum=0;
+        for(j=i;j<numsSize;j++){
+            sum+=nums[j];
+            if(sum>=target){
+                subl=j-i+1;
+                minl=fmin(subl,minl);
+            }
+        }
+    }
+    return minl;
+}
+但超出时间限制
+
+看了卡尔老师视频后，用滑动窗口算法（通过双指针仅用一层for循环）
+int minSubArrayLen(int target, int* nums, int numsSize) {
+    int i=0,j;
+    int sum=0,subl=numsSize,minl=numsSize;
+    for(j=i;j<numsSize;j++){
+        sum+=nums[j];
+        while(sum>=target){
+            subl=j-i+1;
+            minl=fmin(minl,subl);
+            sum=sum-nums[i];
+            i++;
+        }
+    }
+    if(j-i==numsSize)
+    return 0;
+    return minl;
+}
+
+C++与C几乎一样
