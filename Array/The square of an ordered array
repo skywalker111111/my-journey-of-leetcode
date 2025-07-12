@@ -1,0 +1,40 @@
+C:
+int* sortedSquares(int* nums, int numsSize, int* returnSize) {
+    int left=0,right=numsSize-1;
+    int i=numsSize;
+    *returnSize=numsSize;
+    int* result=(int*)malloc(numsSize*sizeof(int));
+    while(left<=right){
+        i--;
+        if(nums[left]+nums[right]<0){
+            result[i]=nums[left]*nums[left];
+            left++;
+        }else{
+            result[i]=nums[right]*nums[right];
+            right--;
+        }
+    }
+    return result;
+}
+这题刚开始卡了一会，用的对撞双指针法，通过左右相加比较绝对值大小，很巧妙。
+
+C++：
+class Solution {
+public:
+    vector<int> sortedSquares(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> ans(n);
+        for (int i = 0, j = n - 1, pos = n - 1; i <= j;) {
+            if (nums[i] * nums[i] > nums[j] * nums[j]) {
+                ans[pos] = nums[i] * nums[i];
+                ++i;
+            }
+            else {
+                ans[pos] = nums[j] * nums[j];
+                --j;
+            }
+            --pos;
+        }
+        return ans;
+    }
+};
