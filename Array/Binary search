@@ -1,1 +1,40 @@
+我首次写的是C语言版
+int search(int* nums, int numsSize, int target) {
+    int left = 0, right = numsSize - 1;
+    int mid;
+    if (target < nums[left] || target > nums[right])
+        return -1;
+    else {
+        while (left <= right) {
+            mid = (left + right) / 2;
+            if (nums[mid] == target)
+                return mid;
+            else if (nums[mid] > target) {
+                right = mid - 1;
+            } else
+                left = mid + 1;
+        }
+        return -1;
+    }
+}
 
+在此再附上C++版
+class Solution {
+public:
+    int search(vector<int>& nums, int target) {
+        int left = 0, right = nums.size() - 1;
+        while(left <= right){
+            int mid = (right - left) / 2 + left;
+            int num = nums[mid];
+            if (num == target) {
+                return mid;
+            } else if (num > target) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return -1;
+    }
+};。
+C++的size函数减少了函数中的引用参数，其他两者差不多
