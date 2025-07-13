@@ -1,0 +1,51 @@
+首先想到的是头插法：
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     struct ListNode *next;
+ * };
+ */
+struct ListNode* reverseList(struct ListNode* head) {
+    struct ListNode* q=head;
+    struct ListNode* h=(struct ListNode*)malloc(sizeof(struct ListNode));
+    h->next=NULL;
+    while(q){
+        struct ListNode* p=(struct ListNode*)malloc(sizeof(struct ListNode));
+        p->val=q->val;
+        p->next=h->next;
+        h->next=p;
+        q=q->next;
+    }
+    return h->next;
+}
+但是这个方法创建了新的链表，空间复杂度高。
+
+题解一（迭代）：
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        ListNode* prev = nullptr;
+        ListNode* curr = head;
+        while (curr) {
+            ListNode* next = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = next;
+        }
+        return prev;
+    }
+};
+很好的方法，通过存储前一个结点直接调转链表方向
+
+题解2（递归）：
+代码很简洁，但是确实很不好想，理解了很久。
+struct ListNode* reverseList(struct ListNode* head) {
+    if (head == NULL || head->next == NULL) {
+        return head;
+    }
+    struct ListNode* newHead = reverseList(head->next);
+    head->next->next = head;
+    head->next = NULL;
+    return newHead;
+}
