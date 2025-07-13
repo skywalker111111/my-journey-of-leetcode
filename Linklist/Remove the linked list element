@@ -1,1 +1,100 @@
+我的首次提交：
+struct ListNode* removeElements(struct ListNode* head, int val) {
+    struct ListNode* p=head;
+    struct ListNode* q=head;
+    if(head==NULL)
+    return head;
+    else if(head->next==NULL&&head->val==val){
+        head=NULL;
+        return head;
+    }else{
+        while(p->next!=NULL){
+            if(p->next->val==val){
+                q=p->next;
+                p->next=q->next;
+            }
+            p=p->next;
+        }
+    }
+报错，发现是漏了情况，并且删除后没有释放内存。
 
+struct ListNode* removeElements(struct ListNode* head, int val) {
+    // 处理头节点等于val的情况
+    while (head != NULL && head->val == val) {
+        struct ListNode* temp = head;
+        head = head->next;
+        free(temp);
+    }
+    
+    if (head == NULL) {
+        return NULL;
+    }
+    
+    struct ListNode* p = head;
+    
+    while (p->next != NULL) {
+        if (p->next->val == val) {
+            struct ListNode* temp = p->next;
+            p->next = temp->next;
+            free(temp);
+        } else {
+            p = p->next;
+        }
+    }
+    
+    return head;
+}
+
+题解方法一（递归）：
+C:
+struct ListNode* removeElements(struct ListNode* head, int val) {
+    if (head == NULL) {
+        return head;
+    }
+    head->next = removeElements(head->next, val);
+    return head->val == val ? head->next : head;
+}
+C++：
+class Solution {
+public:
+    ListNode* removeElements(ListNode* head, int val) {
+        if (head == nullptr) {
+            return head;
+        }
+        head->next = removeElements(head->next, val);
+        return head->val == val ? head->next : head;
+    }
+};
+非常的简洁，通过递归只需要判断头结点即可。
+
+题解方法二：迭代（也是我第一反应想到的方法，但题解中构造哑头结点避开了头结点的讨论，值得学习）
+C:
+struct ListNode* removeElements(struct ListNode* head, int val) {
+    struct ListNode* dummyHead = malloc(sizeof(struct ListNode));
+    dummyHead->next = head;
+    struct ListNode* temp = dummyHead;
+    while (temp->next != NULL) {
+        if (temp->next->val == val) {
+            temp->next = temp->next->next;
+        } else {
+            temp = temp->next;
+        }
+    }
+    return dummyHead->next;
+}
+C++:
+class Solution {
+public:
+    ListNode* removeElements(ListNode* head, int val) {
+        struct ListNode* dummyHead = new ListNode(0, head);
+        struct ListNode* temp = dummyHead;
+        while (temp->next != NULL) {
+            if (temp->next->val == val) {
+                temp->next = temp->next->next;
+            } else {
+                temp = temp->next;
+            }
+        }
+        return dummyHead->next;
+    }
+};
