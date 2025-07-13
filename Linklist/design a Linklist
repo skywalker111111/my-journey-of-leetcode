@@ -1,0 +1,95 @@
+typedef struct node{
+    int val;
+    struct node *next;
+} MyLinkedList;
+
+
+MyLinkedList* myLinkedListCreate() {
+    MyLinkedList *p=(MyLinkedList *)malloc(sizeof(MyLinkedList));
+    p->next=NULL;
+    return p;
+}
+
+int myLinkedListGet(MyLinkedList* obj, int index) {
+    if(index<0){
+        return -1;
+    }
+
+    int i=0;
+    MyLinkedList*p=obj->next;
+
+    while(p && i<index){
+        p=p->next;
+        i++;
+    }
+
+    if(p){
+        return p->val;
+    }else{
+        return -1;
+    }
+}
+
+void myLinkedListAddAtHead(MyLinkedList* obj, int val) {
+    MyLinkedList *p=(MyLinkedList *)malloc(sizeof(MyLinkedList));
+    p->next=obj->next;
+    p->val=val;
+    obj->next=p;
+}
+
+void myLinkedListAddAtTail(MyLinkedList* obj, int val) {
+    MyLinkedList *p=(MyLinkedList *)malloc(sizeof(MyLinkedList));
+    p->next=NULL;
+    p->val=val;
+    MyLinkedList *q=obj;
+    while(q->next){
+        q=q->next;
+    }
+    q->next=p;
+}
+
+void myLinkedListAddAtIndex(MyLinkedList* obj, int index, int val) {
+    if(index<=0){
+        myLinkedListAddAtHead(obj,val);
+        return;
+    }
+    MyLinkedList *p=(MyLinkedList *)malloc(sizeof(MyLinkedList));
+    p->val=val;
+    //找第index-1个元素
+    int i=0;
+    MyLinkedList *q=obj->next;
+    while(q && i<index-1){
+        i++;
+        q=q->next;
+    }
+
+    if(q && i==index-1){
+        p->next=q->next;
+        q->next=p;
+    }
+}
+
+void myLinkedListDeleteAtIndex(MyLinkedList* obj, int index) {
+    int i=0;
+    MyLinkedList *q=obj;
+    while(q->next&&i<index){
+        i++;
+        q=q->next;
+    }
+    if(i==index && q->next){
+        MyLinkedList *p=q->next;
+        q->next=p->next;
+        free(p);
+    }
+}
+
+void myLinkedListFree(MyLinkedList* obj) {
+    MyLinkedList*p=obj->next;
+    while(p){
+        obj->next=p->next;
+        free(p);
+        p=obj->next;
+    }
+    free(obj);
+}
+题解中还有一种双指针法我认为是差不多的，数据结构复杂换来操作相对简单些。
