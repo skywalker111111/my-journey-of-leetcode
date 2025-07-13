@@ -1,0 +1,31 @@
+提交：
+struct ListNode* swapPairs(struct ListNode* head) {
+    struct ListNode* yummyhead=(struct ListNode*)malloc(sizeof(struct ListNode));
+    yummyhead->next=head;
+    struct ListNode* q=yummyhead;
+    struct ListNode* tmp=head;
+    struct ListNode* tmp1=head;
+    while(q->next!=NULL&&q->next->next!=NULL){
+        tmp=q->next;
+        tmp1=q->next->next->next;
+        q->next=tmp->next;
+        q->next->next=tmp;
+        tmp->next=tmp1;
+        q=q->next->next;
+    }
+    return yummyhead->next;
+}
+与题解二迭代法几乎一样。
+
+题解一（递归法）：
+与上一题倒置链表很像，但是不太好想。
+struct ListNode* swapPairs(struct ListNode* head) {
+    if (head == NULL || head->next == NULL) {
+        return head;
+    }
+    struct ListNode* newHead = head->next;
+    head->next = swapPairs(newHead->next);
+    newHead->next = head;
+    return newHead;
+}
+不过确实巧妙。
