@@ -1,0 +1,77 @@
+这题刚开始没有很好的思路，看了评论区发现一种用方向向量的方法很巧妙
+int** generateMatrix(int n, int* returnSize, int** returnColumnSizes) {
+    int i;
+    *returnSize=n;
+    *returnColumnSizes=(int*)malloc(n*sizeof(int));
+    for(i=0;i<n;i++){
+        (*returnColumnSizes)[i]=n;
+    }
+    int** matrix=(int**)malloc(n*sizeof(int*));
+    for(i=0;i<n;i++){
+        matrix[i]=(int*)calloc(n,sizeof(int));
+    }
+    int dx=1,dy=0;
+    int x=0,y=0,tmp;
+    for(i=1;i<=n*n;i++){
+        matrix[y][x]=i;
+        if(matrix[(y+dy+n)%n][(x+dx+n)%n]!=0){
+            tmp=dx;
+            dx=-dy;
+            dy=tmp;
+        }
+        x=x+dx;
+        y=y+dy;
+    }
+    return matrix;
+}
+这是C版，在创建和初始化二维数组时比C++麻烦些
+
+C++的题解（模拟）：
+class Solution {
+public:
+    vector<vector<int>> generateMatrix(int n) {
+        int maxNum = n * n;
+        int curNum = 1;
+        vector<vector<int>> matrix(n, vector<int>(n));
+        int row = 0, column = 0;
+        vector<vector<int>> directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};  // 右下左上
+        int directionIndex = 0;
+        while (curNum <= maxNum) {
+            matrix[row][column] = curNum;
+            curNum++;
+            int nextRow = row + directions[directionIndex][0], nextColumn = column + directions[directionIndex][1];
+            if (nextRow < 0 || nextRow >= n || nextColumn < 0 || nextColumn >= n || matrix[nextRow][nextColumn] != 0) {
+                directionIndex = (directionIndex + 1) % 4;  // 顺时针旋转至下一个方向
+            }
+            row = row + directions[directionIndex][0];
+            column = column + directions[directionIndex][1];
+        }
+        return matrix;
+    }
+};
+也是方向向量，不过直观的给出了4个方向，同时在旋转的判定时更加直白。不过这种方法应该更好想，更容易应用
+
+评论区中看到另一个更为简洁的模拟：
+class Solution {
+public:
+    vector<vector<int>> generateMatrix(int n) {
+        int t = 0;      // top
+        int b = n-1;    // bottom
+        int l = 0;      // left
+        int r = n-1;    // right
+        vector<vector<int>> ans(n,vector<int>(n));
+        int k=1;
+        while(k<=n*n){
+            for(int i=l;i<=r;++i,++k) ans[t][i] = k;
+            ++t;
+            for(int i=t;i<=b;++i,++k) ans[i][r] = k;
+            --r;
+            for(int i=r;i>=l;--i,++k) ans[b][i] = k;
+            --b;
+            for(int i=b;i>=t;--i,++k) ans[i][l] = k;
+            ++l;
+        }
+        return ans;
+    }
+};
+跑一层削一层，清晰优雅！
