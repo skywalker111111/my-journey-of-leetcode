@@ -1,0 +1,91 @@
+提交：
+int cmp(const void* a,const void* b){
+    return *(int*)a-*(int*)b;
+}
+int min(int a,int b){
+    return a<b?a:b;
+}
+int remove_duplicates(int *arr, int n) {
+    if (n == 0) return 0;
+
+    int j = 0; // 新数组的索引
+    for (int i = 1; i < n; i++) {
+        if (arr[i] != arr[j]) {
+            j++;
+            arr[j] = arr[i]; // 存储不重复的元素
+        }
+    }
+    return j + 1; // 返回去重后的长度
+}
+int* intersection(int* nums1, int nums1Size, int* nums2, int nums2Size, int* returnSize) {
+    int i=0,j=0,n=0;
+    qsort(nums1,nums1Size,sizeof(int),cmp);
+    qsort(nums2,nums2Size,sizeof(int),cmp);
+    int new_nums1Size=remove_duplicates(nums1,nums1Size);
+    int new_nums2Size=remove_duplicates(nums2,nums2Size);
+    int* ans=(int*)malloc(min(new_nums1Size,new_nums2Size)*sizeof(int));
+    while(i<new_nums1Size&&j<new_nums2Size){
+        if(nums1[i]==nums2[j]){
+            ans[n]=nums1[i];
+            i++;j++;n++;
+        }else if(nums1[i]<nums2[j]){
+            i++;
+        }else{
+            j++;
+        }
+    }
+    *returnSize=n;
+    return ans;
+}
+//用c稍有些麻烦，qsort可以实现排序，但需要手动实现去重，同时此题我采用双指针。
+
+题解1（两个集合）：
+class Solution {
+public:
+    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+        unordered_set<int> set1, set2;
+        for (auto& num : nums1) {
+            set1.insert(num);
+        }
+        for (auto& num : nums2) {
+            set2.insert(num);
+        }
+        return getIntersection(set1, set2);
+    }
+
+    vector<int> getIntersection(unordered_set<int>& set1, unordered_set<int>& set2) {
+        if (set1.size() > set2.size()) {
+            return getIntersection(set2, set1);
+        }
+        vector<int> intersection;
+        for (auto& num : set1) {
+            if (set2.count(num)) {
+                intersection.push_back(num);
+            }
+        }
+        return intersection;
+    }
+};
+
+题解2与我的提交类似
+
+评论区看到一种巧妙方法：
+class Solution {
+public:
+    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+        vector<int>result;
+        unordered_map<int ,int>hash;
+        for(const auto &c:nums1)
+        {
+            hash[c]=1;
+        }
+        for(const auto &c:nums2)
+        {
+            --hash[c];
+            if(hash[c]==0)
+            result.push_back(c);
+        }
+        return result;
+    }
+};
+//通过设置hash[c]=1,直接避免去重过程。
