@@ -1,0 +1,42 @@
+提交：
+class Solution {
+public:
+    string reverseStr(string s, int k) {
+        int i=0;
+        while(i<s.size()){
+            int remain=s.size()-i;
+            if(remain>=2*k){
+                for(int j=0;j<k/2;j++){
+                    swap(s[i+j],s[i+k-j-1]);
+                }
+                i=i+2*k;
+                continue;
+            }else if(remain<k){
+                for(int j=0;j<remain/2;j++){
+                    swap(s[i+j],s[i+remain-j-1]);
+                }
+                break;
+            }else{
+                for(int j=0;j<k/2;j++){
+                    swap(s[i+j],s[i+k-j-1]);
+                }
+                break;
+            }
+        }
+        return s;
+    }
+};
+直接按题意敲一遍即可
+
+题解：
+class Solution {
+public:
+    string reverseStr(string s, int k) {
+        int n = s.length();
+        for (int i = 0; i < n; i += 2 * k) {
+            reverse(s.begin() + i, s.begin() + min(i + k, n));
+        }
+        return s;
+    }
+};
+emmm题解清晰明了的多。
