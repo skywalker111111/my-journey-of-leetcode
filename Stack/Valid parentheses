@@ -1,0 +1,33 @@
+提交：
+class Solution {
+public:
+    bool isValid(string s) {
+        stack<int> q;
+        int n=s.size();
+        int i;
+        for(i=0;i<n;i++){
+            if(s[i]=='{'||s[i]=='('||s[i]=='['){
+                q.push(s[i]);
+                continue;
+            }else{
+                if(q.empty()){
+                    return false;
+                }else{
+                    char t=q.top();
+                q.pop();
+                if((s[i]=='}'&&t=='{')||(s[i]==')'&&t=='(')||(s[i]==']'&&t=='[')){
+                    continue;
+                }else{
+                    break;
+                }
+                }
+            }
+        }
+        if(i==n&&q.empty()){
+            return true;
+        }else{
+            return false;
+        }
+    }
+};
+过了但是时空间复杂度较高
